@@ -25,8 +25,8 @@ pip install --only-binary :all: joblib==1.4.2
 pip install --only-binary :all: scipy==1.14.1
 pip install --only-binary :all: scikit-learn==1.6.1
 
-echo "=== Installing spaCy ==="
-pip install --no-cache-dir spacy==3.8.3
+echo "=== Installing spaCy (latest available for Python 3.13) ==="
+pip install --no-cache-dir spacy==3.8.11
 
 echo "=== Downloading spaCy model ==="
 python -m spacy download en_core_web_sm
