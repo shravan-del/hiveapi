@@ -11,9 +11,9 @@ echo "=== Installing base packages ==="
 pip install --no-cache-dir Flask==3.0.0 flask-cors==4.0.0 gunicorn==21.2.0
 pip install --no-cache-dir praw==7.7.1
 
-echo "=== Installing numpy and pandas (using binary wheels) ==="
-pip install --only-binary :all: numpy==1.26.4
-pip install --only-binary :all: pandas==2.1.4
+echo "=== Installing numpy and pandas (Python 3.13 compatible) ==="
+pip install --only-binary :all: numpy==2.2.1
+pip install --only-binary :all: pandas==2.2.3
 
 echo "=== Installing OpenAI with httpx ==="
 pip uninstall -y openai httpx || true
@@ -22,20 +22,20 @@ pip install --no-cache-dir openai==1.54.0
 
 echo "=== Installing ML packages (binary wheels) ==="
 pip install --only-binary :all: joblib==1.4.2
-pip install --only-binary :all: scipy==1.11.4
-pip install --only-binary :all: scikit-learn==1.3.2
+pip install --only-binary :all: scipy==1.14.1
+pip install --only-binary :all: scikit-learn==1.6.1
 
 echo "=== Installing spaCy ==="
-pip install --no-cache-dir spacy==3.7.4
+pip install --no-cache-dir spacy==3.8.3
 
 echo "=== Downloading spaCy model ==="
 python -m spacy download en_core_web_sm
 
 echo "=== Installing clustering ==="
-pip install --no-cache-dir hdbscan==0.8.38
+pip install --no-cache-dir hdbscan==0.8.40
 
 echo "=== Installing sentence transformers ==="
-pip install --no-cache-dir sentence-transformers==2.5.1
+pip install --no-cache-dir sentence-transformers==3.3.1
 
 echo "=== Verifying installations ==="
 python -c "import flask; print('Flask OK')"
