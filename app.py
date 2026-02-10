@@ -9,10 +9,10 @@ import hdbscan
 import praw
 from openai import OpenAI
 from collections import Counter
-from sentence_transformers import SentenceTransformer
 import pandas as pd
 import joblib
 import scipy.sparse as sp
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 app = Flask(__name__)
 CORS(app)
@@ -29,8 +29,8 @@ nlp = spacy.load("en_core_web_sm")
 print("Loading classifier and vectorizer...")
 classifier = joblib.load("AutoClassifier.pkl")
 vectorizer = joblib.load("AutoVectorizer.pkl")
-print("Loading sentence transformer...")
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
+print("Initializing TF-IDF embedder (lightweight)...")
+embedder = TfidfVectorizer(max_features=384, ngram_range=(1, 2))
 print("Models loaded successfully")
 
 print("Connecting to Reddit...")
@@ -128,8 +128,8 @@ def top_spacy_entities(texts: list, top_k=10):
     
     return [phrase for phrase, _ in counts.most_common(top_k)]
 
-def cluster_texts(texts: list, min_cluster_size: int = 20):
-    embeddings = embedder.encode(texts, show_progress_bar=False)
+def cluster_texts_with_hdbscan(texts: list, min_cluster_size: int = 20):
+    embeddings = embedder.fit_transform(texts).toarray()
     clusterer = hdbscan.HDBSCAN(min_cluster_size=min_cluster_size)
     labels = clusterer.fit_predict(embeddings)
     return labels
@@ -204,7 +204,7 @@ def analyze_news(days: int = 7, limit: int = 100):
     filtered_texts = df_filtered['title'].tolist()
     
     print("Clustering posts...")
-    labels = cluster_texts(filtered_texts, min_cluster_size=20)
+    labels = cluster_texts_with_hdbscan(filtered_texts, min_cluster_size=20)
     df_filtered['cluster'] = labels
     
     clusters = {}
